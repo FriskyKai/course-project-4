@@ -18,17 +18,23 @@ class UserSeeder extends Seeder
         $role_user = Role::where('code', 'user')->first();
 
         User::create([
+            'surname' => '228',
+            'name' => 'Admin',
             'username' => 'Admin228',
-            'email' => 'admin@mail.ru',
             'password' => 'admin123',
+            'email' => 'admin@mail.ru',
+            'phone' => '88005553530',
             'api_token' => '1',
             'role_id' => $role_admin->id,
         ]);
 
         User::create([
+            'surname' => '337',
+            'name' => 'User',
             'username' => 'User337',
-            'email' => 'user@mail.ru',
             'password' => 'user123',
+            'email' => 'user@mail.ru',
+            'phone' => '88005553531',
             'api_token' => '2',
             'role_id' => $role_user->id,
         ]);
