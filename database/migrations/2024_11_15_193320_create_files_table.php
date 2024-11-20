@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('extension', 6);
             $table->string('size');
             $table->string('path');
-            $table->dateTime('uploaded_at');
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

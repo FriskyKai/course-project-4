@@ -12,7 +12,6 @@ class File extends Model
         'extension',
         'size',
         'path',
-        'uploaded_at',
     ];
 
     protected $hidden = [

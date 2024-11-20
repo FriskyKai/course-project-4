@@ -50,7 +50,7 @@ class AuthController extends Controller
     }
 
     // Выход
-    public function logout(Request $request) {
+    public function logout() {
         $user = Auth::user();
 
         $user->api_token = null;
