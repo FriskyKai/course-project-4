@@ -14,18 +14,6 @@ class File extends Model
         'path',
     ];
 
-    protected $hidden = [
-        'password',
-        'api_token',
-    ];
-
-    protected function casts(): array
-    {
-        return [
-            'password' => 'hashed',
-        ];
-    }
-
     public function user() {
         return $this->belongsTo(Role::class);
     }
