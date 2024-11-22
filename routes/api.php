@@ -38,7 +38,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users/{id}/files', [FileController::class, 'show']);
 
     // Скачивание
-    Route::get('/files/{id}', [FileController::class, 'store']);
+    Route::get('/files/{id}', [FileController::class, 'download']);
     // Редактирование
     Route::post('/files/{id}', [FileController::class, 'update']);
     // Удаление
@@ -58,5 +58,5 @@ Route::middleware('auth:api')->group(function () {
     // Поиск пользователя по имени
     Route::post('/search/user', [SearchController::class, 'userSearch']);
     // Поиск файла по названию (у пользователя)
-    Route::delete('/search/{id}/file', [SearchController::class, 'fileSearch']);
+    Route::post('/search/{id}/file', [SearchController::class, 'fileSearch']);
 });

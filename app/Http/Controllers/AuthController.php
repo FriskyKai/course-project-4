@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ApiException;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class AuthController extends Controller
         $user->save();
 
         return response()->json([
-            'user' => $user,
+            'user' => new UserResource($user),
             'token' => $user->api_token,
         ])->setStatusCode(201);
     }
@@ -44,7 +45,7 @@ class AuthController extends Controller
 
         // Ответ
         return response()->json([
-            'user' => $user,
+            'user' => new UserResource($user),
             'token' => $user->api_token
         ])->setStatusCode(200);
     }
