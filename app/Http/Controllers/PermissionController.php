@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PermissionRequest;
 use App\Models\AccessRight;
 use App\Models\File;
 use Illuminate\Http\Request;
@@ -10,24 +11,19 @@ use Illuminate\Support\Facades\Auth;
 class PermissionController extends Controller
 {
     // Добавление права доступа
-    public function allow(Request $request, $id) {
+    public function allow(PermissionRequest $request, $id) {
         $userId = $request->user_id;
-
-        // Проверяем, что пользователь указал user_id
-        if (!$userId) {
-            return response()->json(['error' => 'User ID is required'], 422);
-        }
 
         // Ищем файл по ID
         $file = File::find($id);
 
         if (!$file) {
-            return response()->json(['error' => 'File not found'], 404);
+            return response()->json('File not found')->setStatusCode(404);
         }
 
         // Проверяем, является ли текущий пользователь владельцем файла
         if ($file->user_id !== Auth::id()) {
-            return response()->json(['error' => 'You are not the owner of this file'], 403);
+            return response()->json('Вы не владелец файла')->setStatusCode(403);
         }
 
         // Добавляем доступ
@@ -40,28 +36,23 @@ class PermissionController extends Controller
             'message' => 'Доступ успешно предоставлен',
             'user_id' => $userId,
             'file_id' => $file->id,
-        ], 201);
+        ])->setStatusCode(201);
     }
 
     // Удаление права доступа
-    public function disallow(Request $request, $id) {
+    public function disallow(PermissionRequest $request, $id) {
         $userId = $request->user_id;
-
-        // Проверяем, что пользователь указал user_id
-        if (!$userId) {
-            return response()->json(['error' => 'User ID is required'], 422);
-        }
 
         // Ищем файл по ID
         $file = File::find($id);
 
         if (!$file) {
-            return response()->json(['error' => 'File not found'], 404);
+            return response()->json('File not found')->setStatusCode(404);
         }
 
         // Проверяем, является ли текущий пользователь владельцем файла
         if ($file->user_id !== Auth::id()) {
-            return response()->json(['error' => 'You are not the owner of this file'], 403);
+            return response()->json('Вы не владелец файла.')->setStatusCode(403);
         }
 
         // Удаляем доступ
@@ -70,7 +61,7 @@ class PermissionController extends Controller
             ->first();
 
         if (!$access) {
-            return response()->json(['error' => 'Access not found'], 404);
+            return response()->json('Access not found')->setStatusCode(404);
         }
 
         $access->delete();
@@ -79,6 +70,6 @@ class PermissionController extends Controller
             'message' => 'Доступ успешно удалён',
             'user_id' => $userId,
             'file_id' => $file->id,
-        ], 200);
+        ])->setStatusCode(200);
     }
 }

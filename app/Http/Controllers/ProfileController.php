@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Http\Resources\FileResource;
 use App\Http\Resources\UserResource;
+use App\Models\File;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -12,9 +14,11 @@ class ProfileController extends Controller
     public function profile() {
         $user = auth()->user();
 
+        $files = File::where('user_id', $user->id)->get();
+
         return response()->json([
             'user' => new UserResource($user),
-            // 'files' => new FileResource($files),
+            'files' => FileResource::collection($files),
         ])->setStatusCode(200);
     }
 
@@ -23,9 +27,11 @@ class ProfileController extends Controller
         $user = auth()->user();
         $user->update($request->all());
 
+        $files = File::where('user_id', $user->id)->get();
+
         return response()->json([
             'user' => new UserResource($user),
-            // 'files' => new FileResource($files),
+            'files' => FileResource::collection($files),
         ])->setStatusCode(200);
     }
 }

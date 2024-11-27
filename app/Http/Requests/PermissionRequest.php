@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FileStoreRequest extends ApiRequest
+class PermissionRequest extends ApiRequest
 {
     public function authorize(): bool
     {
@@ -14,7 +14,8 @@ class FileStoreRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|max:2048',
+            'user_id' => 'required|integer|exists:users,id',
+            'file_id' => 'required|integer|exists:files,id',
         ];
     }
 }

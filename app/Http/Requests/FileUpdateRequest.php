@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FileStoreRequest extends ApiRequest
+class FileUpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,7 +14,7 @@ class FileStoreRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|max:2048',
+            'name' => 'required|string|max:255'
         ];
     }
 }
