@@ -5,6 +5,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,7 +16,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
 // Маршруты для Пользователей
-Route::apiResource('users', User::class)->only('show', 'update', 'destroy')->middleware('auth:api');
+Route::middleware('auth:api')->apiResource('users', UserController::class);
 
 // Маршруты для Профиля
 Route::middleware('auth:api')->group(function () {
