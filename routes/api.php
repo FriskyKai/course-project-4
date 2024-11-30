@@ -6,6 +6,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\CheckRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,8 +16,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
-// Маршруты для Пользователей
-Route::middleware('auth:api')->apiResource('users', UserController::class);
+// Маршруты для Пользователей (Админ)
+Route::middleware(['auth:api', CheckRole::class . ':admin'])->apiResource('users', UserController::class);
 
 // Маршруты для Профиля
 Route::middleware('auth:api')->group(function () {
@@ -29,14 +30,14 @@ Route::middleware('auth:api')->group(function () {
     // Загрузка
     Route::post('/files', [FileController::class, 'store']);
 
-    // Просмотр всех
-    Route::get('/files', [FileController::class, 'index']);
+    // Просмотр всех (Админ)
+    Route::get('/files', [FileController::class, 'index'])->middleware(['auth:api', CheckRole::class . ':admin']);
     // Просмотр своих
     Route::get('/files/disk', [FileController::class, 'disk']);
     // Просмотр разрешённых
     Route::get('/files/shared', [FileController::class, 'shared']);
-    // Просмотр у пользователя
-    Route::get('/users/{id}/files', [FileController::class, 'show']);
+    // Просмотр у пользователя (Админ)
+    Route::get('/users/{id}/files', [FileController::class, 'show'])->middleware(['auth:api', CheckRole::class . ':admin']);
 
     // Скачивание
     Route::get('/files/{id}', [FileController::class, 'download']);
@@ -58,6 +59,6 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('auth:api')->group(function () {
     // Поиск пользователя по имени
     Route::post('/search/user', [SearchController::class, 'userSearch']);
-    // Поиск файла по названию (у пользователя)
+    // Поиск файла у пользователя по названию
     Route::post('/search/{id}/file', [SearchController::class, 'fileSearch']);
 });

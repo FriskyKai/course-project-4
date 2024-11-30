@@ -16,15 +16,15 @@ class SearchController extends Controller
     public function userSearch(UserSearchRequest $request) {
         $username = $request->username; // Получаем параметр запроса 'username'
 
-        $user = User::where('username', $username)
+        $users = User::where('username', $username)
             ->where('username', 'LIKE', "%{$username}%")
             ->get();
 
-        if ($user->isEmpty()) {
+        if ($users->isEmpty()) {
             return response()->json('No users found')->setStatusCode(404);
         }
 
-        return response()->json(new UserResource($user))->setStatusCode(200);
+        return response()->json(UserResource::collection($users))->setStatusCode(200);
     }
 
     // Поиск файла по названию (у пользователя)
