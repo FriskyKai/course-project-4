@@ -16,8 +16,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
-// Маршруты для Пользователей (Админ)
-Route::middleware(['auth:api', CheckRole::class . ':admin'])->apiResource('users', UserController::class);
+// Маршруты для Пользователей
+Route::middleware(['auth:api', CheckRole::class . ':admin'])->apiResource('users', UserController::class)->except('show');
+Route::get('/users/{id}', [UserController::class, 'show'])->middleware('auth:api');
 
 // Маршруты для Профиля
 Route::middleware('auth:api')->group(function () {

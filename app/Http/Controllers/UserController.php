@@ -7,6 +7,7 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -17,10 +18,12 @@ class UserController extends Controller
         return response()->json(UserResource::collection($users))->setStatusCode(200);
     }
 
-    public function show(User $user)
+    public function show($user_id)
     {
-        if (empty($user->id)) {
-            throw new ApiException('Not Found ', 404);
+        $user = User::where('id', $user_id)->firstOrFail();
+
+        if (empty($user)) {
+            throw new ApiException('Not Found', 404);
         }
 
         return response()->json(new UserResource($user))->setStatusCode(200);
@@ -29,7 +32,7 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, User $user)
     {
         if (empty($user->id)) {
-            throw new ApiException('Not Found ', 404);
+            throw new ApiException('Not Found', 404);
         }
 
         $user->update($request->validated());
@@ -37,16 +40,29 @@ class UserController extends Controller
         return response()->json(new UserResource($user))->setStatusCode(200);
     }
 
-    public function destroy($user_id)
+    public function destroy(User $user)
     {
-        $user = User::find($user_id);
-
-        if (!$user) {
-            return response()->json('Пользователь не найден')->setStatusCode(404, 'Not found');
+        if (empty($user)) {
+            throw new ApiException('Not Found', 404);
         }
 
-        User::destroy($user_id);
+        DB::beginTransaction();
 
-        return response()->json(['message' => 'Пользователь успешно удалён.'])->setStatusCode(204);
+        try {
+            // Удаляем связанные данные
+            $user->files()->delete();
+            $user->accessRights()->delete();
+
+            // Удаляем пользователя
+            $user->delete();
+
+            DB::commit();
+
+            return response()->json('Пользователь успешно удалён.')->setStatusCode(200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json('Ошибка удаления пользователя: ' . $e->getMessage(), 500);
+        }
     }
 }

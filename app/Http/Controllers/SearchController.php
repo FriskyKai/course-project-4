@@ -16,9 +16,7 @@ class SearchController extends Controller
     public function userSearch(UserSearchRequest $request) {
         $username = $request->username; // Получаем параметр запроса 'username'
 
-        $users = User::where('username', $username)
-            ->where('username', 'LIKE', "%{$username}%")
-            ->get();
+        $users = User::where('username', 'LIKE', "%{$username}%")->get();
 
         if ($users->isEmpty()) {
             return response()->json('No users found')->setStatusCode(404);
