@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PermissionRequest;
 use App\Models\AccessRight;
 use App\Models\File;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +13,7 @@ class PermissionController extends Controller
 {
     // Добавление права доступа
     public function allow(PermissionRequest $request, $id) {
-        $userId = $request->user_id;
+        $userId = User::where('username', $request->username)->first()->id;
 
         // Ищем файл по ID
         $file = File::find($id);
@@ -41,7 +42,7 @@ class PermissionController extends Controller
 
     // Удаление права доступа
     public function disallow(PermissionRequest $request, $id) {
-        $userId = $request->user_id;
+        $userId = User::where('username', $request->username)->first()->id;
 
         // Ищем файл по ID
         $file = File::find($id);

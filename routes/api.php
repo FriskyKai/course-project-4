@@ -32,13 +32,13 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/files', [FileController::class, 'store']);
 
     // Просмотр всех (Админ)
-    Route::get('/files', [FileController::class, 'index'])->middleware(['auth:api', CheckRole::class . ':admin']);
+    Route::get('/files', [FileController::class, 'index'])->middleware([CheckRole::class . ':admin']);
     // Просмотр своих
     Route::get('/files/disk', [FileController::class, 'disk']);
     // Просмотр разрешённых
     Route::get('/files/shared', [FileController::class, 'shared']);
     // Просмотр у пользователя (Админ)
-    Route::get('/users/{id}/files', [FileController::class, 'show'])->middleware(['auth:api', CheckRole::class . ':admin']);
+    Route::get('/users/{id}/files', [FileController::class, 'show'])->middleware([CheckRole::class . ':admin']);
 
     // Скачивание
     Route::get('/files/{id}', [FileController::class, 'download']);

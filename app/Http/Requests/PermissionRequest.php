@@ -14,7 +14,8 @@ class PermissionRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id',
+//          'user_id' => 'required|integer|exists:users,id',
+            'username' => 'required|string|exists:users,username',
             'file_id' => 'required|integer|exists:files,id',
         ];
     }
