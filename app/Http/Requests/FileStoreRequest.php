@@ -14,7 +14,7 @@ class FileStoreRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|max:2048',
+            'file' => 'required|file|max:2097152',
         ];
     }
 }
