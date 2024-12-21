@@ -22,7 +22,9 @@ class SearchController extends Controller
             return response()->json('No users found')->setStatusCode(404);
         }
 
-        return response()->json(UserResource::collection($users))->setStatusCode(200);
+        return response()->json([
+            'users' => UserResource::collection($users)
+        ])->setStatusCode(200);
     }
 
     // Поиск файла по названию (у пользователя)
@@ -37,6 +39,8 @@ class SearchController extends Controller
             return response()->json('No files found')->setStatusCode(404);
         }
 
-        return response()->json(FileResource::collection($files))->setStatusCode(200);
+        return response()->json([
+            'files' => FileResource::collection($files)
+        ])->setStatusCode(200);
     }
 }

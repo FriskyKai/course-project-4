@@ -136,8 +136,7 @@ class FileController extends Controller
         $file->save();
 
         return response()->json([
-            'message' => 'Имя файла успешно обновлено.',
-            'file' => $file,
+            'file' =>  new FileResource($file),
         ])->setStatusCode(200);
     }
 
