@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ApiException;
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\FileResource;
 use App\Http\Resources\UserResource;
+use App\Models\File;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +28,12 @@ class UserController extends Controller
             throw new ApiException('Not Found', 404);
         }
 
-        return response()->json(new UserResource($user))->setStatusCode(200);
+        $files = File::where('user_id', $user->id)->get();
+
+        return response()->json([
+            'user' => new UserResource($user),
+            'files' => FileResource::collection($files),
+        ])->setStatusCode(200);
     }
 
     public function update(UserUpdateRequest $request, User $user)
@@ -37,7 +44,12 @@ class UserController extends Controller
 
         $user->update($request->validated());
 
-        return response()->json(new UserResource($user))->setStatusCode(200);
+        $files = File::where('user_id', $user->id)->get();
+
+        return response()->json([
+            'user' => new UserResource($user),
+            'files' => FileResource::collection($files),
+        ])->setStatusCode(200);
     }
 
     public function destroy(User $user)
@@ -58,7 +70,7 @@ class UserController extends Controller
 
             DB::commit();
 
-            return response()->json('Пользователь успешно удалён.')->setStatusCode(200);
+            return response()->json('Пользователь удалён успешно.')->setStatusCode(200);
         } catch (\Exception $e) {
             DB::rollBack();
 
