@@ -54,6 +54,10 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/files/{id}/accesses', [PermissionController::class, 'allow']);
     // Удаление прав доступа
     Route::delete('/files/{id}/accesses', [PermissionController::class, 'disallow']);
+    // Просмотр разрешённых прав доступа
+    Route::get('/perms', [PermissionController::class, 'permsAllowed']);
+    // Просмотр полученных прав доступа
+    Route::get('/perms/my', [PermissionController::class, 'permsReceived']);
 });
 
 // Маршруты для Поиска
@@ -61,5 +65,5 @@ Route::middleware('auth:api')->group(function () {
     // Поиск пользователя по имени
     Route::post('/search/user', [SearchController::class, 'userSearch']);
     // Поиск файла у пользователя по названию
-    Route::post('/search/{id}/file', [SearchController::class, 'fileSearch']);
+    Route::post('/search/file', [SearchController::class, 'fileSearch']);
 });

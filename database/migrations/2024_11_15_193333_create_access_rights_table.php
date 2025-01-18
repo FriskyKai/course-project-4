@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('access_rights', function (Blueprint $table) {
             $table->id();
+            $table->string('owner');
             $table->foreignId('user_id')->constrained();
             $table->foreignId('file_id')->constrained();
             $table->timestamps();

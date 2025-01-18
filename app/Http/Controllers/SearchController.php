@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
-    // Поиск пользователя по имени
+    // Поиск пользователя по имени пользователя
     public function userSearch(UserSearchRequest $request) {
         $username = $request->username; // Получаем параметр запроса 'username'
 
@@ -28,12 +28,10 @@ class SearchController extends Controller
     }
 
     // Поиск файла по названию (у пользователя)
-    public function fileSearch(FileSearchRequest $request, $id) {
+    public function fileSearch(FileSearchRequest $request) {
         $name = $request->name; // Получаем параметр запроса 'name'
 
-        $files = File::where('user_id', $id)
-            ->where('name', 'LIKE', "%{$name}%")
-            ->get();
+        $files = File::where('name', 'LIKE', "%{$name}%")->get();
 
         if ($files->isEmpty()) {
             return response()->json('No files found')->setStatusCode(404);

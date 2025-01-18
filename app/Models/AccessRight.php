@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AccessRight extends Model
 {
     protected $fillable = [
+        'owner',
         'user_id',
         'file_id',
     ];

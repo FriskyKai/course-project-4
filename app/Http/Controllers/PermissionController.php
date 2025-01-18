@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PermissionRequest;
+use App\Http\Resources\PermissionResource;
 use App\Models\AccessRight;
 use App\Models\File;
 use App\Models\User;
@@ -11,6 +12,34 @@ use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller
 {
+    // Просмотр данных прав доступа
+    public function permsAllowed() {
+        $user = User::where('id', Auth::user()->id)->first();
+
+        $rights = AccessRight::where('owner', $user->username)->get();
+
+        if ($rights->isEmpty()) {
+            return response()->json('Вы ещё не предоставляли права доступа к файлам')->setStatusCode(404);
+        }
+
+        return response()->json([
+            'perms' => PermissionResource::collection($rights),
+        ])->setStatusCode(200);
+    }
+
+    // Просмотр полученных прав доступа
+    public function permsReceived() {
+        $rights = AccessRight::where('user_id', Auth::user()->id)->get();
+
+        if ($rights->isEmpty()) {
+            return response()->json('Вы ещё не получали права доступа к файлам')->setStatusCode(404);
+        }
+
+        return response()->json([
+            'perms' => PermissionResource::collection($rights),
+        ])->setStatusCode(200);
+    }
+
     // Добавление права доступа
     public function allow(PermissionRequest $request, $id) {
         $userId = User::where('username', $request->username)->first()->id;
